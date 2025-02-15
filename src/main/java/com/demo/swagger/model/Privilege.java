@@ -1,22 +1,21 @@
 package com.demo.swagger.model;
 
 import com.demo.swagger.enums.UserRole;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.*;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@Table(name = "privileges")
 public class Privilege {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String name;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
     
     @NotNull
