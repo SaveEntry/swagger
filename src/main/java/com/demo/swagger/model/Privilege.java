@@ -1,7 +1,7 @@
 package com.demo.swagger.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.demo.swagger.enums.UserRole;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 
@@ -14,6 +14,7 @@ public class Privilege {
     private Long id;
     
     @NotNull
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -21,7 +22,7 @@ public class Privilege {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private UserRole userRole = UserRole.USER; // Default role is USER
+    private UserRole userRole = UserRole.USER;
     
     // Getters and Setters
     public Long getId() {
