@@ -1,5 +1,7 @@
+// src/main/java/com/demo/swagger/dto/UserDTO.java
 package com.demo.swagger.dto;
 
+import com.demo.swagger.enums.UserStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -40,7 +42,25 @@ public class UserDTO {
     )
     private String phoneNumber;
     
-    // Getters and Setters
+    // Status is optional in DTO as it defaults to ACTIVE
+    @Schema(
+        example = "ACTIVE",
+        required = false, 
+        allowableValues = {"ACTIVE", "INACTIVE", "SUSPENDED"},
+        description = "User status - defaults to ACTIVE if not specified"
+    )
+    private UserStatus status;
+    
+    // Add getters and setters for the new status field
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+    
+    // Existing getters and setters
     public String getEmail() {
         return email;
     }

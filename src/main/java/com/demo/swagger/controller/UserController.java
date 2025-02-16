@@ -1,3 +1,4 @@
+// src/main/java/com/demo/swagger/controller/UserController.java
 package com.demo.swagger.controller;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class UserController {
     @PostMapping
     @Operation(
         summary = "Create a new user",
-        description = "Creates a new user. All fields are mandatory. Email and role combination must be unique."
+        description = "Creates a new user. All fields are mandatory except status, which defaults to ACTIVE. Email and role combination must be unique."
     )
     @ApiResponses(value = {
         @ApiResponse(
@@ -52,7 +53,7 @@ public class UserController {
     public ResponseEntity<?> createUser(@Valid @RequestBody UserDTO userDTO) {
         User createdUser = userService.createUser(userDTO);
         return ResponseEntity.ok()
-            .body(new UserCreationResponse(createdUser.getId(), "User registered successfully"));
+            .body(new UserCreationResponse(createdUser.getId(), "User registered successfully", createdUser.getStatus().toString()));
     }
     
     @GetMapping
@@ -89,14 +90,16 @@ public class UserController {
         return error;
     }
     
-    // Inner class for creation response
+    // Updated inner class for creation response to include status
     public static class UserCreationResponse {
         private Long id;
         private String message;
+        private String status;
         
-        public UserCreationResponse(Long id, String message) {
+        public UserCreationResponse(Long id, String message, String status) {
             this.id = id;
             this.message = message;
+            this.status = status;
         }
         
         public Long getId() {
@@ -105,6 +108,10 @@ public class UserController {
         
         public String getMessage() {
             return message;
+        }
+        
+        public String getStatus() {
+            return status;
         }
     }
 }
