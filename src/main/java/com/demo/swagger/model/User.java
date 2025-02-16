@@ -44,8 +44,8 @@ public class User {
     private String phoneNumber;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserStatus status = UserStatus.ACTIVE; // Default to ACTIVE
+    @Column(nullable = false, columnDefinition = "varchar(255) default 'ACTIVE'")
+    private UserStatus status = UserStatus.ACTIVE;
     
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
