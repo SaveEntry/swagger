@@ -1,3 +1,4 @@
+// src/main/java/com/demo/swagger/service/UserService.java
 package com.demo.swagger.service;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demo.swagger.dto.UserDTO;
 import com.demo.swagger.model.User;
+import com.demo.swagger.enums.UserStatus;
 import com.demo.swagger.repository.UserRepository;
 import com.demo.swagger.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
@@ -34,6 +36,11 @@ public class UserService {
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getRole());
         user.setPhoneNumber(userDTO.getPhoneNumber());
+        
+        // Set status if provided in DTO, otherwise it defaults to ACTIVE in the entity
+        if (userDTO.getStatus() != null) {
+            user.setStatus(userDTO.getStatus());
+        }
         
         user = userRepository.save(user);
         

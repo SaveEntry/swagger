@@ -1,5 +1,7 @@
+// src/main/java/com/demo/swagger/model/User.java
 package com.demo.swagger.model;
 
+import com.demo.swagger.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -41,11 +43,24 @@ public class User {
     @Column(nullable = false)
     private String phoneNumber;
     
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, columnDefinition = "varchar(255) default 'ACTIVE'")
+    private UserStatus status = UserStatus.ACTIVE;
+    
     @JsonManagedReference
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Privilege> privileges;
 
-    // Getters and setters remain the same
+    // Add getters and setters for the new status field
+    public UserStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(UserStatus status) {
+        this.status = status;
+    }
+
+    // Existing getters and setters
     public Set<Privilege> getPrivileges() {
         return privileges;
     }
