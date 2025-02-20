@@ -12,7 +12,7 @@ import com.demo.swagger.repository.UserRepository;
 import com.demo.swagger.repository.UserTokenRepository;
 import com.demo.swagger.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
-
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -27,6 +27,9 @@ public class UserService {
  // In UserService.java, add these repository dependencies
     @Autowired
     private UserTokenRepository userTokenRepository;
+    
+    @Autowired
+    private EntityManager entityManager; // Add this
 
     @Transactional
     public User createUser(UserDTO userDTO) {
@@ -59,21 +62,28 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         try {
-            User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
-
-            // Clear relationships
-            if (user.getPrivileges() != null) {
-                user.getPrivileges().clear();
+            // First check if user exists
+            if (!userRepository.existsById(id)) {
+                throw new EntityNotFoundException("User not found with id: " + id);
             }
-            
-            // Delete user token if exists
-            userTokenRepository.findByUser(user)
-                .ifPresent(userTokenRepository::delete);
 
-            // Finally delete the user
-            userRepository.delete(user);
+            // Execute delete queries in correct order
+            entityManager.createNativeQuery("DELETE FROM user_tokens WHERE user_id = :userId")
+                .setParameter("userId", id)
+                .executeUpdate();
+
+            entityManager.createNativeQuery("DELETE FROM privileges WHERE user_id = :userId")
+                .setParameter("userId", id)
+                .executeUpdate();
+
+            entityManager.createNativeQuery("DELETE FROM users WHERE id = :userId")
+                .setParameter("userId", id)
+                .executeUpdate();
+
+            entityManager.flush();
             
+        } catch (EntityNotFoundException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException("Error deleting user: " + e.getMessage());
         }

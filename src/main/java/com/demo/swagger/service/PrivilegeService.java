@@ -45,9 +45,8 @@ public class PrivilegeService {
             .orElseThrow(() -> new EntityNotFoundException("Privilege not found for user"));
     }
     
- // In PrivilegeService.java, add this method
     @Transactional
     public void deleteUserPrivileges(User user) {
-        privilegeRepository.deleteByUser(user);
+        privilegeRepository.deleteAllByUser(user);
     }
 }

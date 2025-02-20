@@ -39,22 +39,21 @@ public class User {
     @Column(nullable = false)
     private String role;
     
-    // In User.java, update the phoneNumber field annotation
     @NotNull(message = "Phone number is mandatory")
     @NotBlank(message = "Phone number cannot be blank")
     @Pattern(regexp = "^\\+[1-9]\\d{1,14}$", message = "Phone number must be in international format (e.g., +11234567890)")
     @Column(nullable = false)
-    private String phoneNumber = ""; // Provide a default value
+    private String phoneNumber;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "varchar(255) default 'ACTIVE'")
     private UserStatus status = UserStatus.ACTIVE;
     
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private Set<Privilege> privileges = new HashSet<>();
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "user")
     private UserToken userToken;
 
     // Add getters and setters for the new status field
