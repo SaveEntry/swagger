@@ -91,16 +91,15 @@ public class UserController {
         return error;
     }
     
- // In UserController.java
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Delete user by ID",
-        description = "Deletes a user by their ID. Also removes associated privileges and tokens."
+        summary = "Deactivate user by ID",
+        description = "Changes user status to INACTIVE instead of completely removing the record."
     )
     @ApiResponses(value = {
         @ApiResponse(
             responseCode = "200",
-            description = "User deleted successfully"
+            description = "User deactivated successfully"
         ),
         @ApiResponse(
             responseCode = "404",
@@ -108,14 +107,14 @@ public class UserController {
         ),
         @ApiResponse(
             responseCode = "500",
-            description = "Internal server error during deletion"
+            description = "Internal server error during deactivation"
         )
     })
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
             Map<String, String> response = new HashMap<>();
-            response.put("message", "User deleted successfully");
+            response.put("message", "User deactivated successfully");
             return ResponseEntity.ok(response);
         } catch (EntityNotFoundException e) {
             Map<String, String> error = new HashMap<>();
@@ -123,7 +122,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
-            error.put("error", "Error deleting user: " + e.getMessage());
+            error.put("error", "Error deactivating user: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
     }

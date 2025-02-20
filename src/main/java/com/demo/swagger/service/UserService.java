@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demo.swagger.dto.UserDTO;
+import com.demo.swagger.enums.UserStatus;
 import com.demo.swagger.model.User;
 import com.demo.swagger.repository.UserRepository;
 import com.demo.swagger.repository.UserTokenRepository;
@@ -62,30 +63,20 @@ public class UserService {
     @Transactional
     public void deleteUser(Long id) {
         try {
-            // First check if user exists
-            if (!userRepository.existsById(id)) {
-                throw new EntityNotFoundException("User not found with id: " + id);
-            }
-
-            // Execute delete queries in correct order
-            entityManager.createNativeQuery("DELETE FROM user_tokens WHERE user_id = :userId")
-                .setParameter("userId", id)
-                .executeUpdate();
-
-            entityManager.createNativeQuery("DELETE FROM privileges WHERE user_id = :userId")
-                .setParameter("userId", id)
-                .executeUpdate();
-
-            entityManager.createNativeQuery("DELETE FROM users WHERE id = :userId")
-                .setParameter("userId", id)
-                .executeUpdate();
-
-            entityManager.flush();
+            // Find the user
+            User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+            
+            // Change status to INACTIVE instead of deleting
+            user.setStatus(UserStatus.INACTIVE);
+            
+            // Save the updated user
+            userRepository.save(user);
             
         } catch (EntityNotFoundException e) {
             throw e;
         } catch (Exception e) {
-            throw new RuntimeException("Error deleting user: " + e.getMessage());
+            throw new RuntimeException("Error updating user status: " + e.getMessage());
         }
     }
     
