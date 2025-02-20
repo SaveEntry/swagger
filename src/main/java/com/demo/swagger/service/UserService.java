@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.demo.swagger.dto.UserDTO;
 import com.demo.swagger.model.User;
-import com.demo.swagger.enums.UserStatus;
 import com.demo.swagger.repository.UserRepository;
+import com.demo.swagger.repository.UserTokenRepository;
 import com.demo.swagger.exception.UserAlreadyExistsException;
 import jakarta.transaction.Transactional;
+
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UserService {
@@ -22,6 +24,10 @@ public class UserService {
     @Autowired
     private PrivilegeService privilegeService;
     
+ // In UserService.java, add these repository dependencies
+    @Autowired
+    private UserTokenRepository userTokenRepository;
+
     @Transactional
     public User createUser(UserDTO userDTO) {
         if (userRepository.existsByEmailAndRole(userDTO.getEmail(), userDTO.getRole())) {
@@ -48,6 +54,29 @@ public class UserService {
         privilegeService.createInitialPrivilege(user);
         
         return user;
+    }
+    
+    @Transactional
+    public void deleteUser(Long id) {
+        try {
+            User user = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + id));
+
+            // Clear relationships
+            if (user.getPrivileges() != null) {
+                user.getPrivileges().clear();
+            }
+            
+            // Delete user token if exists
+            userTokenRepository.findByUser(user)
+                .ifPresent(userTokenRepository::delete);
+
+            // Finally delete the user
+            userRepository.delete(user);
+            
+        } catch (Exception e) {
+            throw new RuntimeException("Error deleting user: " + e.getMessage());
+        }
     }
     
     // Other methods remain the same

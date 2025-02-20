@@ -5,6 +5,9 @@ import com.demo.swagger.model.Privilege;
 import com.demo.swagger.model.User;
 import java.util.Optional;
 
+//In PrivilegeRepository.java
 public interface PrivilegeRepository extends JpaRepository<Privilege, Long> {
-    Optional<Privilege> findByUser(User user);
+Optional<Privilege> findByUser(User user);
+void deleteByUser(User user);
+void deleteAllByUser(User user);
 }
