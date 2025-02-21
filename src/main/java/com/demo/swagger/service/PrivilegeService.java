@@ -8,6 +8,7 @@ import com.demo.swagger.repository.PrivilegeRepository;
 import com.demo.swagger.repository.UserRepository;
 import com.demo.swagger.enums.UserRole;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class PrivilegeService {
@@ -42,5 +43,10 @@ public class PrivilegeService {
             
         return privilegeRepository.findByUser(user)
             .orElseThrow(() -> new EntityNotFoundException("Privilege not found for user"));
+    }
+    
+    @Transactional
+    public void deleteUserPrivileges(User user) {
+        privilegeRepository.deleteAllByUser(user);
     }
 }

@@ -9,14 +9,13 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "privileges")
 public class Privilege {
     
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotNull
     @JsonBackReference
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
     
     @NotNull

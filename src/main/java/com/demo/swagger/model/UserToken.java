@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 @Table(name = "user_tokens")
 public class UserToken {
     
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @OneToOne
+	@OneToOne(fetch = FetchType.EAGER) // Change LAZY to EAGER
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
     

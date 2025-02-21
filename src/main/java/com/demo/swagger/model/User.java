@@ -5,6 +5,8 @@ import com.demo.swagger.enums.UserStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -48,8 +50,11 @@ public class User {
     private UserStatus status = UserStatus.ACTIVE;
     
     @JsonManagedReference
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Privilege> privileges;
+    @OneToMany(mappedBy = "user")
+    private Set<Privilege> privileges = new HashSet<>();
+
+    @OneToOne(mappedBy = "user")
+    private UserToken userToken;
 
     // Add getters and setters for the new status field
     public UserStatus getStatus() {
