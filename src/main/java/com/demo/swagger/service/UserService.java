@@ -25,15 +25,20 @@ public class UserService {
     @Autowired
     private PrivilegeService privilegeService;
     
- // In UserService.java, add these repository dependencies
-    @Autowired
-    private UserTokenRepository userTokenRepository;
-    
-    @Autowired
-    private EntityManager entityManager; // Add this
-
     @Transactional
     public User createUser(UserDTO userDTO) {
+        // Check for null values explicitly
+        if (userDTO.getEmail() == null || userDTO.getPassword() == null || 
+            userDTO.getRole() == null || userDTO.getPhoneNumber() == null) {
+            throw new IllegalArgumentException("All fields (email, password, role, phoneNumber) are mandatory");
+        }
+        
+        // Check for empty strings after trimming
+        if (userDTO.getEmail().trim().isEmpty() || userDTO.getPassword().trim().isEmpty() || 
+            userDTO.getRole().trim().isEmpty() || userDTO.getPhoneNumber().trim().isEmpty()) {
+            throw new IllegalArgumentException("All fields (email, password, role, phoneNumber) cannot be empty");
+        }
+        
         if (userRepository.existsByEmailAndRole(userDTO.getEmail(), userDTO.getRole())) {
             throw new UserAlreadyExistsException(
                 String.format("User already exists with email %s and role %s", 

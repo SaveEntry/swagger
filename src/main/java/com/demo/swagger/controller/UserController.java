@@ -136,6 +136,14 @@ public class UserController {
         return error;
     }
     
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleIllegalArgumentException(IllegalArgumentException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return error;
+    }
+    
     // Updated inner class for creation response to include status
     public static class UserCreationResponse {
         private Long id;
