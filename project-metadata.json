@@ -1,0 +1,1958 @@
+{
+  "project_structure": {
+    "pom.xml": null,
+    "src": {
+      "main": {
+        "java": {
+          "com": {
+            "demo": {
+              "swagger": {
+                "SwaggerApplication.java": null,
+                "config": {
+                  "SecurityConfig.java": null
+                },
+                "controller": {
+                  "AuthController.java": null,
+                  "PrivilegeController.java": null,
+                  "UserController.java": null
+                },
+                "dto": {
+                  "PrivilegeUpdateDTO.java": null,
+                  "SignInDTO.java": null,
+                  "UserDTO.java": null
+                },
+                "enums": {
+                  "UserRole.java": null,
+                  "UserStatus.java": null
+                },
+                "exception": {
+                  "UserAlreadyExistsException.java": null
+                },
+                "model": {
+                  "Privilege.java": null,
+                  "User.java": null,
+                  "UserToken.java": null
+                },
+                "repository": {
+                  "PrivilegeRepository.java": null,
+                  "UserRepository.java": null,
+                  "UserTokenRepository.java": null
+                },
+                "service": {
+                  "AuthService.java": null,
+                  "JwtService.java": null,
+                  "PrivilegeService.java": null,
+                  "TokenRefreshService.java": null,
+                  "UserService.java": null
+                }
+              }
+            }
+          }
+        },
+        "resources": {
+          "application.properties": null
+        }
+      },
+      "test": {
+        "java": {
+          "com": {
+            "demo": {
+              "swagger": {
+                "SwaggerApplicationTests.java": null
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "class_definitions": {
+    "src\\main\\java\\com\\demo\\swagger\\SwaggerApplication.java": {
+      "package": "com.demo.swagger",
+      "name": "SwaggerApplication",
+      "type": "class",
+      "annotations": [
+        "SpringBootApplication"
+      ],
+      "methods": [
+        {
+          "name": "main",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String[] args"
+        }
+      ],
+      "fields": [],
+      "imports": [
+        "org.springframework.boot.SpringApplication",
+        "org.springframework.boot.autoconfigure.SpringBootApplication"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\config\\SecurityConfig.java": {
+      "package": "com.demo.swagger.config",
+      "name": "SecurityConfig",
+      "type": "class",
+      "annotations": [
+        "Configuration",
+        "EnableWebSecurity"
+      ],
+      "methods": [
+        {
+          "name": "filterChain",
+          "returnType": "SecurityFilterChain",
+          "visibility": "public",
+          "parameters": "HttpSecurity http"
+        }
+      ],
+      "fields": [],
+      "imports": [
+        "org.springframework.context.annotation.Bean",
+        "org.springframework.context.annotation.Configuration",
+        "org.springframework.security.config.annotation.web.builders.HttpSecurity",
+        "org.springframework.security.config.annotation.web.configuration.EnableWebSecurity",
+        "org.springframework.security.web.SecurityFilterChain"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\controller\\AuthController.java": {
+      "package": "com.demo.swagger.controller",
+      "name": "AuthController",
+      "type": "class",
+      "annotations": [
+        "RestController",
+        "RequestMapping",
+        "Tag"
+      ],
+      "methods": [
+        {
+          "name": "signIn",
+          "returnType": "ResponseEntity<?>",
+          "visibility": "public",
+          "parameters": "@Valid @RequestBody SignInDTO signInDTO"
+        }
+      ],
+      "fields": [
+        {
+          "name": "authService",
+          "type": "AuthService",
+          "visibility": "private"
+        },
+        {
+          "name": "token",
+          "type": "String",
+          "visibility": ""
+        },
+        {
+          "name": "response",
+          "type": "Map<String, String>",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.http.ResponseEntity",
+        "org.springframework.web.bind.annotation.*",
+        "com.demo.swagger.dto.SignInDTO",
+        "com.demo.swagger.service.AuthService",
+        "io.swagger.v3.oas.annotations.Operation",
+        "io.swagger.v3.oas.annotations.tags.Tag",
+        "jakarta.validation.Valid",
+        "java.util.HashMap",
+        "java.util.Map"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\controller\\PrivilegeController.java": {
+      "package": "com.demo.swagger.controller",
+      "name": "PrivilegeController",
+      "type": "class",
+      "annotations": [
+        "RestController",
+        "RequestMapping",
+        "Tag"
+      ],
+      "methods": [
+        {
+          "name": "getUserPrivilege",
+          "returnType": "ResponseEntity<Privilege>",
+          "visibility": "public",
+          "parameters": "@PathVariable Long userId"
+        },
+        {
+          "name": "updateUserPrivilege",
+          "returnType": "ResponseEntity<Privilege>",
+          "visibility": "public",
+          "parameters": "@PathVariable Long userId,\n            @Valid @RequestBody PrivilegeUpdateDTO privilegeUpdateDTO"
+        }
+      ],
+      "fields": [
+        {
+          "name": "privilegeService",
+          "type": "PrivilegeService",
+          "visibility": "private"
+        }
+      ],
+      "imports": [
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.http.ResponseEntity",
+        "org.springframework.web.bind.annotation.*",
+        "com.demo.swagger.service.PrivilegeService",
+        "com.demo.swagger.dto.PrivilegeUpdateDTO",
+        "com.demo.swagger.model.Privilege",
+        "io.swagger.v3.oas.annotations.Operation",
+        "io.swagger.v3.oas.annotations.tags.Tag",
+        "jakarta.validation.Valid"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\controller\\UserController.java": {
+      "package": "com.demo.swagger.controller",
+      "name": "UserController",
+      "type": "class",
+      "annotations": [
+        "RestController",
+        "RequestMapping",
+        "Tag"
+      ],
+      "methods": [
+        {
+          "name": "createUser",
+          "returnType": "ResponseEntity<?>",
+          "visibility": "public",
+          "parameters": "@Valid @RequestBody UserDTO userDTO"
+        },
+        {
+          "name": "getUserById",
+          "returnType": "ResponseEntity<User>",
+          "visibility": "public",
+          "parameters": "@PathVariable Long id"
+        },
+        {
+          "name": "handleValidationExceptions",
+          "returnType": "Map<String, String>",
+          "visibility": "public",
+          "parameters": "MethodArgumentNotValidException ex"
+        },
+        {
+          "name": "handleUserAlreadyExistsException",
+          "returnType": "Map<String, String>",
+          "visibility": "public",
+          "parameters": "UserAlreadyExistsException ex"
+        },
+        {
+          "name": "deleteUser",
+          "returnType": "ResponseEntity<?>",
+          "visibility": "public",
+          "parameters": "@PathVariable Long id"
+        },
+        {
+          "name": "handleEntityNotFoundException",
+          "returnType": "Map<String, String>",
+          "visibility": "public",
+          "parameters": "EntityNotFoundException ex"
+        },
+        {
+          "name": "handleIllegalArgumentException",
+          "returnType": "Map<String, String>",
+          "visibility": "public",
+          "parameters": "IllegalArgumentException ex"
+        },
+        {
+          "name": "UserCreationResponse",
+          "returnType": "public",
+          "visibility": "",
+          "parameters": "Long id, String message, String status"
+        },
+        {
+          "name": "getId",
+          "returnType": "Long",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getMessage",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getStatus",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        }
+      ],
+      "fields": [
+        {
+          "name": "userService",
+          "type": "UserService",
+          "visibility": "private"
+        },
+        {
+          "name": "createdUser",
+          "type": "User",
+          "visibility": ""
+        },
+        {
+          "name": "errors",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "fieldName",
+          "type": "String",
+          "visibility": ""
+        },
+        {
+          "name": "errorMessage",
+          "type": "String",
+          "visibility": ""
+        },
+        {
+          "name": "errors",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "response",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "Map<String, String>",
+          "visibility": ""
+        },
+        {
+          "name": "error",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "id",
+          "type": "Long",
+          "visibility": "private"
+        },
+        {
+          "name": "message",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "status",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "id",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "message",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "status",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "java.util.List",
+        "java.util.HashMap",
+        "java.util.Map",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.http.ResponseEntity",
+        "org.springframework.http.HttpStatus",
+        "org.springframework.web.bind.annotation.*",
+        "org.springframework.validation.FieldError",
+        "org.springframework.web.bind.MethodArgumentNotValidException",
+        "com.demo.swagger.dto.UserDTO",
+        "com.demo.swagger.model.User",
+        "com.demo.swagger.service.UserService",
+        "com.demo.swagger.exception.UserAlreadyExistsException",
+        "io.swagger.v3.oas.annotations.Operation",
+        "io.swagger.v3.oas.annotations.media.Content",
+        "io.swagger.v3.oas.annotations.media.Schema",
+        "io.swagger.v3.oas.annotations.responses.ApiResponse",
+        "io.swagger.v3.oas.annotations.responses.ApiResponses",
+        "io.swagger.v3.oas.annotations.tags.Tag",
+        "jakarta.persistence.EntityNotFoundException",
+        "jakarta.validation.Valid"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\dto\\PrivilegeUpdateDTO.java": {
+      "package": "com.demo.swagger.dto",
+      "name": "PrivilegeUpdateDTO",
+      "type": "class",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "getUserRole",
+          "returnType": "UserRole",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setUserRole",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "UserRole userRole"
+        }
+      ],
+      "fields": [
+        {
+          "name": "userRole",
+          "type": "UserRole",
+          "visibility": "private"
+        },
+        {
+          "name": "userRole",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "jakarta.validation.constraints.NotNull",
+        "com.demo.swagger.enums.UserRole"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\dto\\SignInDTO.java": {
+      "package": "com.demo.swagger.dto",
+      "name": "SignInDTO",
+      "type": "class",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "getEmail",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setEmail",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String email"
+        },
+        {
+          "name": "getPassword",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setPassword",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String password"
+        },
+        {
+          "name": "getRole",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setRole",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String role"
+        },
+        {
+          "name": "getPhoneNumber",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setPhoneNumber",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String phoneNumber"
+        }
+      ],
+      "fields": [
+        {
+          "name": "email",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "password",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "role",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "phoneNumber",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "email",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "password",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "role",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "phoneNumber",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "jakarta.validation.constraints.Email",
+        "jakarta.validation.constraints.NotBlank",
+        "jakarta.validation.constraints.NotNull"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\dto\\UserDTO.java": {
+      "package": "com.demo.swagger.dto",
+      "name": "UserDTO",
+      "type": "class",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "format",
+          "returnType": "international",
+          "visibility": "",
+          "parameters": "e.g., +11234567890"
+        },
+        {
+          "name": "getStatus",
+          "returnType": "UserStatus",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setStatus",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "UserStatus status"
+        },
+        {
+          "name": "getEmail",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setEmail",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String email"
+        },
+        {
+          "name": "getPassword",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setPassword",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String password"
+        },
+        {
+          "name": "getRole",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setRole",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String role"
+        },
+        {
+          "name": "getPhoneNumber",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setPhoneNumber",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String phoneNumber"
+        }
+      ],
+      "fields": [
+        {
+          "name": "email",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "password",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "role",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "phoneNumber",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "status",
+          "type": "UserStatus",
+          "visibility": "private"
+        },
+        {
+          "name": "status",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "email",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "password",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "role",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "phoneNumber",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "com.demo.swagger.enums.UserStatus",
+        "io.swagger.v3.oas.annotations.media.Schema",
+        "jakarta.validation.constraints.Email",
+        "jakarta.validation.constraints.NotBlank",
+        "jakarta.validation.constraints.NotNull",
+        "jakarta.validation.constraints.Pattern"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\enums\\UserRole.java": {
+      "package": "com.demo.swagger.enums",
+      "name": "UserRole",
+      "type": "enum",
+      "annotations": [],
+      "methods": [],
+      "fields": [],
+      "imports": []
+    },
+    "src\\main\\java\\com\\demo\\swagger\\enums\\UserStatus.java": {
+      "package": "com.demo.swagger.enums",
+      "name": "UserStatus",
+      "type": "enum",
+      "annotations": [],
+      "methods": [],
+      "fields": [],
+      "imports": []
+    },
+    "src\\main\\java\\com\\demo\\swagger\\exception\\UserAlreadyExistsException.java": {
+      "package": "com.demo.swagger.exception",
+      "name": "UserAlreadyExistsException",
+      "type": "class",
+      "annotations": [],
+      "methods": [],
+      "fields": [],
+      "imports": []
+    },
+    "src\\main\\java\\com\\demo\\swagger\\model\\Privilege.java": {
+      "package": "com.demo.swagger.model",
+      "name": "Privilege",
+      "type": "class",
+      "annotations": [
+        "Entity",
+        "Table"
+      ],
+      "methods": [
+        {
+          "name": "getId",
+          "returnType": "Long",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setId",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "Long id"
+        },
+        {
+          "name": "getUser",
+          "returnType": "User",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setUser",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "User user"
+        },
+        {
+          "name": "getUserRole",
+          "returnType": "UserRole",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setUserRole",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "UserRole userRole"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "Long",
+          "visibility": "private"
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": "private"
+        },
+        {
+          "name": "userRole",
+          "type": "UserRole",
+          "visibility": "private"
+        },
+        {
+          "name": "id",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "userRole",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "com.fasterxml.jackson.annotation.JsonBackReference",
+        "com.demo.swagger.enums.UserRole",
+        "jakarta.persistence.*",
+        "jakarta.validation.constraints.NotNull"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\model\\User.java": {
+      "package": "com.demo.swagger.model",
+      "name": "User",
+      "type": "class",
+      "annotations": [
+        "Entity",
+        "Table"
+      ],
+      "methods": [
+        {
+          "name": "format",
+          "returnType": "international",
+          "visibility": "",
+          "parameters": "e.g., +11234567890"
+        },
+        {
+          "name": "getStatus",
+          "returnType": "UserStatus",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setStatus",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "UserStatus status"
+        },
+        {
+          "name": "getPrivileges",
+          "returnType": "Set<Privilege>",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setPrivileges",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "Set<Privilege> privileges"
+        },
+        {
+          "name": "getId",
+          "returnType": "Long",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getEmail",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getPassword",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getRole",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getPhoneNumber",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setId",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "Long id"
+        },
+        {
+          "name": "setEmail",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String email"
+        },
+        {
+          "name": "setPassword",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String password"
+        },
+        {
+          "name": "setRole",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String role"
+        },
+        {
+          "name": "setPhoneNumber",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String phoneNumber"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "Long",
+          "visibility": "private"
+        },
+        {
+          "name": "email",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "password",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "role",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "phoneNumber",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "status",
+          "type": "UserStatus",
+          "visibility": "private"
+        },
+        {
+          "name": "privileges",
+          "type": "Set<Privilege>",
+          "visibility": "private"
+        },
+        {
+          "name": "userToken",
+          "type": "UserToken",
+          "visibility": "private"
+        },
+        {
+          "name": "status",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "privileges",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "id",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "email",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "password",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "role",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "phoneNumber",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "com.demo.swagger.enums.UserStatus",
+        "com.fasterxml.jackson.annotation.JsonManagedReference",
+        "jakarta.persistence.*",
+        "jakarta.validation.constraints.*",
+        "java.util.HashSet",
+        "java.util.Set"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\model\\UserToken.java": {
+      "package": "com.demo.swagger.model",
+      "name": "UserToken",
+      "type": "class",
+      "annotations": [
+        "Entity",
+        "Table"
+      ],
+      "methods": [
+        {
+          "name": "getId",
+          "returnType": "Long",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setId",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "Long id"
+        },
+        {
+          "name": "getUser",
+          "returnType": "User",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setUser",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "User user"
+        },
+        {
+          "name": "getToken",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setToken",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "String token"
+        },
+        {
+          "name": "getExpiryTime",
+          "returnType": "LocalDateTime",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "setExpiryTime",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "LocalDateTime expiryTime"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "Long",
+          "visibility": "private"
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": "private"
+        },
+        {
+          "name": "token",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "expiryTime",
+          "type": "LocalDateTime",
+          "visibility": "private"
+        },
+        {
+          "name": "id",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "token",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "expiryTime",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "jakarta.persistence.*",
+        "java.time.LocalDateTime"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\repository\\PrivilegeRepository.java": {
+      "package": "com.demo.swagger.repository",
+      "name": "PrivilegeRepository",
+      "type": "interface",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "findByUser",
+          "returnType": "Optional<Privilege>",
+          "visibility": "",
+          "parameters": "User user"
+        },
+        {
+          "name": "deleteByUser",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "User user"
+        },
+        {
+          "name": "deleteAllByUser",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "User user"
+        },
+        {
+          "name": "deleteByUserId",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "@Param(\"userId\""
+        }
+      ],
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "WHERE",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.data.jpa.repository.JpaRepository",
+        "org.springframework.data.jpa.repository.Modifying",
+        "org.springframework.data.jpa.repository.Query",
+        "org.springframework.data.repository.query.Param",
+        "com.demo.swagger.model.Privilege",
+        "com.demo.swagger.model.User",
+        "java.util.Optional"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\repository\\UserRepository.java": {
+      "package": "com.demo.swagger.repository",
+      "name": "UserRepository",
+      "type": "interface",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "existsByEmailAndRole",
+          "returnType": "boolean",
+          "visibility": "",
+          "parameters": "String email, String role"
+        },
+        {
+          "name": "findByEmailAndRoleAndPasswordAndPhoneNumber",
+          "returnType": "Optional<User>",
+          "visibility": "",
+          "parameters": "String email, \n        String role, \n        String password, \n        String phoneNumber"
+        },
+        {
+          "name": "deleteUserById",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "@Param(\"id\""
+        },
+        {
+          "name": "existsById",
+          "returnType": "boolean",
+          "visibility": "",
+          "parameters": "Long id"
+        }
+      ],
+      "fields": [
+        {
+          "name": "id",
+          "type": "WHERE",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.data.jpa.repository.JpaRepository",
+        "org.springframework.data.jpa.repository.Modifying",
+        "org.springframework.data.jpa.repository.Query",
+        "org.springframework.data.repository.query.Param",
+        "com.demo.swagger.model.User",
+        "java.util.Optional"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\repository\\UserTokenRepository.java": {
+      "package": "com.demo.swagger.repository",
+      "name": "UserTokenRepository",
+      "type": "interface",
+      "annotations": [],
+      "methods": [
+        {
+          "name": "findByUser",
+          "returnType": "Optional<UserToken>",
+          "visibility": "",
+          "parameters": "User user"
+        },
+        {
+          "name": "findAll",
+          "returnType": "List<UserToken>",
+          "visibility": "",
+          "parameters": ""
+        },
+        {
+          "name": "deleteByUser",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "User user"
+        },
+        {
+          "name": "deleteByUserId",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": "@Param(\"userId\""
+        }
+      ],
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "WHERE",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "com.demo.swagger.model.UserToken",
+        "jakarta.transaction.Transactional",
+        "com.demo.swagger.model.User",
+        "org.springframework.data.jpa.repository.JpaRepository",
+        "org.springframework.data.jpa.repository.Modifying",
+        "org.springframework.data.jpa.repository.Query",
+        "org.springframework.data.repository.query.Param",
+        "java.util.List",
+        "java.util.Optional"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\service\\AuthService.java": {
+      "package": "com.demo.swagger.service",
+      "name": "AuthService",
+      "type": "class",
+      "annotations": [
+        "Service"
+      ],
+      "methods": [
+        {
+          "name": "signIn",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": "SignInDTO signInDTO"
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"Invalid credentials\""
+        }
+      ],
+      "fields": [
+        {
+          "name": "userRepository",
+          "type": "UserRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "userTokenRepository",
+          "type": "UserTokenRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "jwtService",
+          "type": "JwtService",
+          "visibility": "private"
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": ""
+        },
+        {
+          "name": "token",
+          "type": "String",
+          "visibility": ""
+        },
+        {
+          "name": "userToken",
+          "type": "UserToken",
+          "visibility": ""
+        },
+        {
+          "name": "token",
+          "type": "return",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.stereotype.Service",
+        "com.demo.swagger.dto.SignInDTO",
+        "com.demo.swagger.model.User",
+        "com.demo.swagger.model.UserToken",
+        "com.demo.swagger.repository.UserRepository",
+        "com.demo.swagger.repository.UserTokenRepository",
+        "jakarta.persistence.EntityNotFoundException",
+        "java.time.LocalDateTime"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\service\\JwtService.java": {
+      "package": "com.demo.swagger.service",
+      "name": "JwtService",
+      "type": "class",
+      "annotations": [
+        "Service"
+      ],
+      "methods": [
+        {
+          "name": "getSigningKey",
+          "returnType": "Key",
+          "visibility": "private",
+          "parameters": ""
+        },
+        {
+          "name": "generateToken",
+          "returnType": "String",
+          "visibility": "public",
+          "parameters": "String email, String role"
+        },
+        {
+          "name": "validateToken",
+          "returnType": "Claims",
+          "visibility": "public",
+          "parameters": "String token"
+        }
+      ],
+      "fields": [
+        {
+          "name": "secretKey",
+          "type": "String",
+          "visibility": "private"
+        },
+        {
+          "name": "claims",
+          "type": "Map<String, Object>",
+          "visibility": ""
+        },
+        {
+          "name": "now",
+          "type": "LocalDateTime",
+          "visibility": ""
+        },
+        {
+          "name": "expiryTime",
+          "type": "LocalDateTime",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "io.jsonwebtoken.Claims",
+        "io.jsonwebtoken.Jwts",
+        "io.jsonwebtoken.SignatureAlgorithm",
+        "io.jsonwebtoken.security.Keys",
+        "org.springframework.beans.factory.annotation.Value",
+        "org.springframework.stereotype.Service",
+        "java.security.Key",
+        "java.time.LocalDateTime",
+        "java.time.ZoneId",
+        "java.util.Date",
+        "java.util.HashMap",
+        "java.util.Map"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\service\\PrivilegeService.java": {
+      "package": "com.demo.swagger.service",
+      "name": "PrivilegeService",
+      "type": "class",
+      "annotations": [
+        "Service"
+      ],
+      "methods": [
+        {
+          "name": "createInitialPrivilege",
+          "returnType": "Privilege",
+          "visibility": "public",
+          "parameters": "User user"
+        },
+        {
+          "name": "Privilege",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": ""
+        },
+        {
+          "name": "updateUserPrivilege",
+          "returnType": "Privilege",
+          "visibility": "public",
+          "parameters": "Long userId, UserRole newRole"
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"User not found\""
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"Privilege not found for user\""
+        },
+        {
+          "name": "getUserPrivilege",
+          "returnType": "Privilege",
+          "visibility": "public",
+          "parameters": "Long userId"
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"User not found\""
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"Privilege not found for user\""
+        },
+        {
+          "name": "deleteUserPrivileges",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "User user"
+        }
+      ],
+      "fields": [
+        {
+          "name": "privilegeRepository",
+          "type": "PrivilegeRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "userRepository",
+          "type": "UserRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "privilege",
+          "type": "Privilege",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": ""
+        },
+        {
+          "name": "privilege",
+          "type": "Privilege",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.stereotype.Service",
+        "com.demo.swagger.model.Privilege",
+        "com.demo.swagger.model.User",
+        "com.demo.swagger.repository.PrivilegeRepository",
+        "com.demo.swagger.repository.UserRepository",
+        "com.demo.swagger.enums.UserRole",
+        "jakarta.persistence.EntityNotFoundException",
+        "jakarta.transaction.Transactional"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\service\\TokenRefreshService.java": {
+      "package": "com.demo.swagger.service",
+      "name": "TokenRefreshService",
+      "type": "class",
+      "annotations": [
+        "Service",
+        "EnableScheduling"
+      ],
+      "methods": [
+        {
+          "name": "refreshTokens",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": ""
+        }
+      ],
+      "fields": [
+        {
+          "name": "userTokenRepository",
+          "type": "UserTokenRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "jwtService",
+          "type": "JwtService",
+          "visibility": "private"
+        },
+        {
+          "name": "tokens",
+          "type": "List<UserToken>",
+          "visibility": ""
+        },
+        {
+          "name": "newToken",
+          "type": "String",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.scheduling.annotation.EnableScheduling",
+        "org.springframework.scheduling.annotation.Scheduled",
+        "org.springframework.stereotype.Service",
+        "org.springframework.transaction.annotation.Transactional",
+        "com.demo.swagger.model.UserToken",
+        "com.demo.swagger.repository.UserTokenRepository",
+        "java.time.LocalDateTime",
+        "java.util.List"
+      ]
+    },
+    "src\\main\\java\\com\\demo\\swagger\\service\\UserService.java": {
+      "package": "com.demo.swagger.service",
+      "name": "UserService",
+      "type": "class",
+      "annotations": [
+        "Service"
+      ],
+      "methods": [
+        {
+          "name": "createUser",
+          "returnType": "User",
+          "visibility": "public",
+          "parameters": "UserDTO userDTO"
+        },
+        {
+          "name": "if",
+          "returnType": "explicitly",
+          "visibility": "",
+          "parameters": "userDTO.getEmail("
+        },
+        {
+          "name": "IllegalArgumentException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"All fields (email, password, role, phoneNumber"
+        },
+        {
+          "name": "if",
+          "returnType": "trimming",
+          "visibility": "",
+          "parameters": "userDTO.getEmail("
+        },
+        {
+          "name": "IllegalArgumentException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"All fields (email, password, role, phoneNumber"
+        },
+        {
+          "name": "UserAlreadyExistsException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "String.format(\"User already exists with email %s and role %s\", \n                userDTO.getEmail("
+        },
+        {
+          "name": "User",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": ""
+        },
+        {
+          "name": "if",
+          "returnType": "entity",
+          "visibility": "",
+          "parameters": "userDTO.getStatus("
+        },
+        {
+          "name": "deleteUser",
+          "returnType": "void",
+          "visibility": "public",
+          "parameters": "Long id"
+        },
+        {
+          "name": "EntityNotFoundException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"User not found with id: \" + id"
+        },
+        {
+          "name": "RuntimeException",
+          "returnType": "new",
+          "visibility": "",
+          "parameters": "\"Error updating user status: \" + e.getMessage("
+        },
+        {
+          "name": "getAllUsers",
+          "returnType": "List<User>",
+          "visibility": "public",
+          "parameters": ""
+        },
+        {
+          "name": "getUserById",
+          "returnType": "Optional<User>",
+          "visibility": "public",
+          "parameters": "Long id"
+        }
+      ],
+      "fields": [
+        {
+          "name": "userRepository",
+          "type": "UserRepository",
+          "visibility": "private"
+        },
+        {
+          "name": "privilegeService",
+          "type": "PrivilegeService",
+          "visibility": "private"
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "return",
+          "visibility": ""
+        },
+        {
+          "name": "user",
+          "type": "User",
+          "visibility": ""
+        },
+        {
+          "name": "e",
+          "type": "throw",
+          "visibility": ""
+        }
+      ],
+      "imports": [
+        "java.util.List",
+        "java.util.Optional",
+        "org.springframework.beans.factory.annotation.Autowired",
+        "org.springframework.stereotype.Service",
+        "com.demo.swagger.dto.UserDTO",
+        "com.demo.swagger.enums.UserStatus",
+        "com.demo.swagger.model.User",
+        "com.demo.swagger.repository.UserRepository",
+        "com.demo.swagger.repository.UserTokenRepository",
+        "com.demo.swagger.exception.UserAlreadyExistsException",
+        "jakarta.transaction.Transactional",
+        "jakarta.persistence.EntityManager",
+        "jakarta.persistence.EntityNotFoundException"
+      ]
+    },
+    "src\\test\\java\\com\\demo\\swagger\\SwaggerApplicationTests.java": {
+      "package": "com.demo.swagger",
+      "name": "SwaggerApplicationTests",
+      "type": "class",
+      "annotations": [
+        "SpringBootTest"
+      ],
+      "methods": [
+        {
+          "name": "contextLoads",
+          "returnType": "void",
+          "visibility": "",
+          "parameters": ""
+        }
+      ],
+      "fields": [],
+      "imports": [
+        "org.junit.jupiter.api.Test",
+        "org.springframework.boot.test.context.SpringBootTest"
+      ]
+    }
+  },
+  "dependencies": [
+    {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-starter-security",
+      "version": null,
+      "scope": null
+    },
+    {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-starter-web",
+      "version": null,
+      "scope": null
+    },
+    {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-devtools",
+      "version": null,
+      "scope": "runtime"
+    },
+    {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-starter-test",
+      "version": null,
+      "scope": "test"
+    },
+    {
+      "groupId": "org.springframework.security",
+      "artifactId": "spring-security-test",
+      "version": null,
+      "scope": "test"
+    },
+    {
+      "groupId": "org.springdoc",
+      "artifactId": "springdoc-openapi-starter-webmvc-ui",
+      "version": "2.1.0",
+      "scope": null
+    },
+    {
+      "groupId": "org.springframework.boot",
+      "artifactId": "spring-boot-starter-data-jpa",
+      "version": null,
+      "scope": null
+    },
+    {
+      "groupId": "org.postgresql",
+      "artifactId": "postgresql",
+      "version": null,
+      "scope": "runtime"
+    },
+    {
+      "groupId": "com.fasterxml.jackson.core",
+      "artifactId": "jackson-databind",
+      "version": null,
+      "scope": null
+    },
+    {
+      "groupId": "com.fasterxml.jackson.datatype",
+      "artifactId": "jackson-datatype-jsr310",
+      "version": null,
+      "scope": null
+    },
+    {
+      "groupId": "io.jsonwebtoken",
+      "artifactId": "jjwt-api",
+      "version": "0.11.5",
+      "scope": null
+    },
+    {
+      "groupId": "io.jsonwebtoken",
+      "artifactId": "jjwt-impl",
+      "version": "0.11.5",
+      "scope": "runtime"
+    },
+    {
+      "groupId": "io.jsonwebtoken",
+      "artifactId": "jjwt-jackson",
+      "version": "0.11.5",
+      "scope": "runtime"
+    }
+  ],
+  "relationships": {
+    "AuthController": [
+      {
+        "type": "has",
+        "target": "AuthService",
+        "fieldName": "authService"
+      }
+    ],
+    "PrivilegeController": [
+      {
+        "type": "has",
+        "target": "PrivilegeService",
+        "fieldName": "privilegeService"
+      }
+    ],
+    "UserController": [
+      {
+        "type": "has",
+        "target": "UserService",
+        "fieldName": "userService"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "createdUser"
+      }
+    ],
+    "PrivilegeUpdateDTO": [
+      {
+        "type": "has",
+        "target": "UserRole",
+        "fieldName": "userRole"
+      }
+    ],
+    "UserDTO": [
+      {
+        "type": "has",
+        "target": "UserStatus",
+        "fieldName": "status"
+      }
+    ],
+    "Privilege": [
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      },
+      {
+        "type": "has",
+        "target": "UserRole",
+        "fieldName": "userRole"
+      }
+    ],
+    "User": [
+      {
+        "type": "has",
+        "target": "UserStatus",
+        "fieldName": "status"
+      },
+      {
+        "type": "has",
+        "target": "UserToken",
+        "fieldName": "userToken"
+      }
+    ],
+    "UserToken": [
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      }
+    ],
+    "AuthService": [
+      {
+        "type": "has",
+        "target": "UserRepository",
+        "fieldName": "userRepository"
+      },
+      {
+        "type": "has",
+        "target": "UserTokenRepository",
+        "fieldName": "userTokenRepository"
+      },
+      {
+        "type": "has",
+        "target": "JwtService",
+        "fieldName": "jwtService"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      },
+      {
+        "type": "has",
+        "target": "UserToken",
+        "fieldName": "userToken"
+      }
+    ],
+    "PrivilegeService": [
+      {
+        "type": "has",
+        "target": "PrivilegeRepository",
+        "fieldName": "privilegeRepository"
+      },
+      {
+        "type": "has",
+        "target": "UserRepository",
+        "fieldName": "userRepository"
+      },
+      {
+        "type": "has",
+        "target": "Privilege",
+        "fieldName": "privilege"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      },
+      {
+        "type": "has",
+        "target": "Privilege",
+        "fieldName": "privilege"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      }
+    ],
+    "TokenRefreshService": [
+      {
+        "type": "has",
+        "target": "UserTokenRepository",
+        "fieldName": "userTokenRepository"
+      },
+      {
+        "type": "has",
+        "target": "JwtService",
+        "fieldName": "jwtService"
+      }
+    ],
+    "UserService": [
+      {
+        "type": "has",
+        "target": "UserRepository",
+        "fieldName": "userRepository"
+      },
+      {
+        "type": "has",
+        "target": "PrivilegeService",
+        "fieldName": "privilegeService"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      },
+      {
+        "type": "has",
+        "target": "User",
+        "fieldName": "user"
+      }
+    ]
+  },
+  "annotations": {},
+  "project_info": {
+    "groupId": "org.springframework.boot",
+    "artifactId": "spring-boot-starter-parent",
+    "version": "3.2.3",
+    "name": "swagger",
+    "description": "Demo project for Spring Boot"
+  },
+  "properties": {
+    "java.version": "17"
+  },
+  "annotations_index": {
+    "RestController": [
+      "AuthController",
+      "PrivilegeController",
+      "UserController"
+    ],
+    "Entity": [
+      "Privilege",
+      "User",
+      "UserToken"
+    ],
+    "Service": [
+      "AuthService",
+      "JwtService",
+      "PrivilegeService",
+      "TokenRefreshService",
+      "UserService"
+    ]
+  }
+}
